@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.media.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="681.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prac1.controllers.MainScreenController">
+   <children>
+      <HBox layoutX="87.0" layoutY="47.0">
+         <children>
+            <Label layoutX="87.0" layoutY="47.0" prefHeight="115.0" prefWidth="534.0" text="Ajusta el volum i al premer el botó hauries d'escoltar una breu musica de test." />
+         </children>
+      </HBox>
+      <Button fx:id="btn_test" layoutX="255.0" layoutY="194.0" mnemonicParsing="false" onAction="#on_botTestClic" prefHeight="85.0" prefWidth="172.0" text="TEST" />
+   </children>
+</AnchorPane>
