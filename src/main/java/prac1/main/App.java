@@ -18,8 +18,10 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         
-        try {
         
+        
+        try {
+            
             String fxml = "vista/mainScreen";
 
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getClassLoader().getResource(fxml + ".fxml"));
@@ -27,6 +29,10 @@ public class App extends Application {
             Parent p = fxmlLoader.load();
 
             scene = new Scene(p);
+            
+            primaryStage.setMinHeight(600);
+            primaryStage.setMinWidth(800);
+            
             
             primaryStage.setScene(scene);
             
