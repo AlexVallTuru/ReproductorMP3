@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
@@ -45,6 +46,10 @@ public class MainScreenController implements Initializable {
     private Button listPlayButton;
     @FXML
     private Button deleteButton;
+    @FXML
+    private Button randomButton;
+    @FXML
+    private MenuItem loadfileButton;
     
     void on_botTestClic(ActionEvent event) {
         
@@ -92,38 +97,30 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    private void onActionRepeatButton(ActionEvent event) {
+    private void onAction_PlayButton(ActionEvent event) {
+                
+
     }
 
     @FXML
-    private void onActionBackfastforwardButton(ActionEvent event) {
+    private void onAction_loadfileButton(ActionEvent event) {
+        
+        // desactivem el botó fins que el player estigui en estat READY 
+        this.playButton.setDisable(true);
+        
+        Path file = FileUtils.getMP3Fromfile();
+         
+        if (file != null) {
+
+              String mp3File = FileUtils.normalizeURLFormat(file.toString());
+
+              //txtArea1.appendText("Obrint [" + mp3File + "]....");
+
+              openMedia(mp3File);
+              
+              //btn_select.setDisable(true);
+        
+    }
     }
 
-    @FXML
-    private void onActionPlayButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_FastforwardButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_ReapeatButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_VolumenButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_SliderBar(MouseEvent event) {
-    }
-
-    @FXML
-    private void onAction_ListPlayButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_DeleteButton(ActionEvent event) {
-    }
 }
