@@ -20,10 +20,16 @@ public class FileUtils {
      */
     public static String normalizeURLFormat(String url)
     {
-        String ret = "";
+        String ret = url;
         
         if (IdentificaOS.getOS() == IdentificaOS.TipusOS.WIN)
-            ret = url.replace("[A-Z]{1}:", "");
+        {
+            //ret = url.replaceFirst("[A-Z]{1}:", "");
+            ret = url.replace("\\", "/");
+            ret = "/" + ret;
+        }
+        
+        ret = "file:"+ret;
         
         return ret;
     }
