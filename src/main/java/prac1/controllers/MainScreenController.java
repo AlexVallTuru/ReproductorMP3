@@ -49,11 +49,6 @@ public class MainScreenController implements Initializable {
     private Button randomButton;
     @FXML
     private MenuItem loadfileButton;
-    
-    void on_botTestClic(ActionEvent event) {
-        
-        if (this.player != null)
-            player.play();     
 
     // el Map on desarem les dades
     ObservableMap<String, Object> metaDades;
@@ -142,41 +137,5 @@ public class MainScreenController implements Initializable {
 
             System.out.println("ERROR obrint fitxer demo: " + path + ":" + e.toString());
         }
-    }
-
-    @FXML
-    private void onActionRepeatButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onActionBackfastforwardButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onActionPlayButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_FastforwardButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_ReapeatButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_VolumenButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_SliderBar(MouseEvent event) {
-    }
-
-    @FXML
-    private void onAction_ListPlayButton(ActionEvent event) {
-    }
-
-    @FXML
-    private void onAction_DeleteButton(ActionEvent event) {
     }
 }
