@@ -27,6 +27,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import javafx.util.Duration;
 import prac1.utils.FileUtils;
 
 /**
@@ -151,6 +152,34 @@ public class MainScreenController implements Initializable {
 
             //btn_select.setDisable(true);
         }
+    }
+    
+    /**
+     * Retrocedeix 5 segons la reproduccio 
+     * 
+     * @param event 
+     */
+    @FXML
+    private void onAction_backfastforwardButton(ActionEvent event) {
+        
+        //Obtenir temps de reproduccio actual i restar 5 segons
+        Duration currentTime = this.player.getCurrentTime();
+        currentTime = currentTime.subtract(Duration.seconds(5));
+        this.player.seek(currentTime);
+    }
+    
+    /**
+     * Avança 5 segons la reproduccio
+     * 
+     * @param event 
+     */
+    @FXML
+    private void onAction_fastforwardButton(ActionEvent event) {
+        
+        //Obtenir temps de reproduccio actual i afegir 5 segons
+        Duration currentTime = this.player.getCurrentTime();
+        currentTime = currentTime.add(Duration.seconds(5));
+        this.player.seek(currentTime);
     }
 
     private void openMedia(String path) {
