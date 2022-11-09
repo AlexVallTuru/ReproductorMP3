@@ -129,19 +129,7 @@
                <children>
                   <HBox alignment="CENTER" layoutX="42.0" layoutY="300.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="31.0">
                      <children>
-                        <Button fx:id="listPlayButton" mnemonicParsing="false" prefHeight="15.0" prefWidth="23.0" style="-fx-background-color: trans;">
-                           <graphic>
-                              <ImageView fitHeight="29.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/playsmall.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <HBox.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </HBox.margin>
-                        </Button>
-                        <Button fx:id="deleteButton" mnemonicParsing="false" style="-fx-background-color: trans;">
+                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onAction_deleteButton" style="-fx-background-color: trans;">
                            <graphic>
                               <ImageView fitHeight="35.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -175,7 +163,7 @@
                         <Insets bottom="15.0" left="10.0" right="20.0" top="20.0" />
                      </padding>
                   </HBox>
-                  <ListView layoutX="42.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="131.0" AnchorPane.topAnchor="100.0" />
+                  <ListView fx:id="songListView" layoutX="42.0" layoutY="100.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="131.0" AnchorPane.topAnchor="100.0" />
                </children>
             </AnchorPane>
          </right>
