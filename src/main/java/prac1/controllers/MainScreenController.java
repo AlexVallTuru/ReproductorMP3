@@ -22,6 +22,10 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import javafx.util.Duration;
 import prac1.utils.FileUtils;
@@ -56,10 +60,16 @@ public class MainScreenController implements Initializable {
     private Button randomButton;
     @FXML
     private MenuItem loadfileButton;
+    @FXML
+    private ImageView imageplay;
+
+    Image playing;
+
+    Image pausing;
 
     // el Map on desarem les dades
     ObservableMap<String, Object> metaDades;
-
+    
     /**
      * *
      * Inicialitza el controlador
@@ -67,12 +77,17 @@ public class MainScreenController implements Initializable {
      * @param url
      * @param rb
      */
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         String path = FileUtils.getTestMP3(this);
-
+        
         openMedia(path);
+
+        playing = new Image(FileUtils.getIcona(this, "play_1.png"));
+
+        pausing = new Image(FileUtils.getIcona(this, "stop.png"));
 
         //Este codigo habilita el slider volumen
         sliderBar.valueProperty().addListener(new ChangeListener<Number>() {
@@ -103,6 +118,20 @@ public class MainScreenController implements Initializable {
             //    txtArea1.appendText("Clau -->" + entrada.getKey() + "    Valor ---> " + entrada.getValue() + System.lineSeparator());
             //}
             player.play();
+
+            switch (player.getStatus()) {
+                case PLAYING:
+                    player.pause();
+                    playing = new Image(FileUtils.getIcona(this, "pause.png"));
+                    imageplay.setImage(playing);
+                    break;
+
+                case PAUSED:
+                    player.play();
+                    pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
+                    imageplay.setImage(pausing);
+                    break;
+            }
         }
     }
 
