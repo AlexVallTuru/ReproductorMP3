@@ -118,7 +118,7 @@
                            <image>
                               <Image url="@../icons/ic_menu_small1.png" />
                            </image>
-                        </ImageView>
+                         </ImageView>
                      </graphic>
                   </MenuButton>
                </children>
