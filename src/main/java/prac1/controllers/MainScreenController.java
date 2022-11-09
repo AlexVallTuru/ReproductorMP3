@@ -7,12 +7,10 @@ package prac1.controllers;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,12 +22,8 @@ import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-
 import javafx.util.Duration;
 import prac1.utils.FileUtils;
 
@@ -74,9 +68,6 @@ public class MainScreenController implements Initializable {
 
     Image pausing;
 
-    // el Map on desarem les dades
-    ObservableMap<String, Object> metaDades;
-    
     /**
      * *
      * Inicialitza el controlador
@@ -84,21 +75,19 @@ public class MainScreenController implements Initializable {
      * @param url
      * @param rb
      */
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        String path = FileUtils.getTestMP3(this);
-        openMedia(path);
         songListView.setItems(songs);
 
         songListView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
 
             this.songListView.setItems(songs);
             deleteButton.setDisable(false);
-        
-        openMedia(path);
+        });
 
+        String path = FileUtils.getTestMP3(this);
+        openMedia(path);
         playing = new Image(FileUtils.getIcona(this, "play_1.png"));
 
         pausing = new Image(FileUtils.getIcona(this, "stop.png"));
@@ -120,7 +109,7 @@ public class MainScreenController implements Initializable {
      *
      *
      */
-    // Cargamos el archivo
+// Cargamos el archivo
     @FXML
     private void onAction_loadfileButton(ActionEvent event) {
 
@@ -179,29 +168,29 @@ public class MainScreenController implements Initializable {
         }
 
     }
-    
+
     /**
-     * Retrocedeix 5 segons la reproduccio 
-     * 
-     * @param event 
+     * Retrocedeix 5 segons la reproduccio
+     *
+     * @param event
      */
     @FXML
     private void onAction_backfastforwardButton(ActionEvent event) {
-        
+
         //Obtenir temps de reproduccio actual i restar 5 segons
         Duration currentTime = this.player.getCurrentTime();
         currentTime = currentTime.subtract(Duration.seconds(5));
         this.player.seek(currentTime);
     }
-    
+
     /**
      * Avança 5 segons la reproduccio
-     * 
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     private void onAction_fastforwardButton(ActionEvent event) {
-        
+
         //Obtenir temps de reproduccio actual i afegir 5 segons
         Duration currentTime = this.player.getCurrentTime();
         currentTime = currentTime.add(Duration.seconds(5));
