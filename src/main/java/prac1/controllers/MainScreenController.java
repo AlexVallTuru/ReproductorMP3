@@ -7,11 +7,15 @@ package prac1.controllers;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
@@ -26,6 +30,8 @@ import prac1.utils.FileUtils;
  */
 public class MainScreenController implements Initializable {
 
+    ObservableMap<String, Object> metaDades;
+    ObservableList<String> songs = FXCollections.observableArrayList();
     Media media = null;
 
     MediaPlayer player = null;
@@ -49,9 +55,8 @@ public class MainScreenController implements Initializable {
     private Button randomButton;
     @FXML
     private MenuItem loadfileButton;
-
-    // el Map on desarem les dades
-    ObservableMap<String, Object> metaDades;
+    @FXML
+    private ListView<String> songListView;
 
     /**
      * *
@@ -64,9 +69,14 @@ public class MainScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         String path = FileUtils.getTestMP3(this);
-
         openMedia(path);
+        songListView.setItems(songs);
 
+        songListView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+
+            this.songListView.setItems(songs);
+            deleteButton.setDisable(false);
+        });
     }
 
     /**
@@ -77,20 +87,7 @@ public class MainScreenController implements Initializable {
      *
      *
      */
-    @FXML
-    private void onAction_PlayButton(ActionEvent event) {
-        // si l'anterior ha anat bé (media no és null), obtenim les metadades
-        if (media != null) {
-            metaDades = media.getMetadata();
-
-            //txtArea1.appendText("METADADES: " + System.lineSeparator());
-            //for (Map.Entry<String, Object> entrada : metaDades.entrySet()) {
-            //    txtArea1.appendText("Clau -->" + entrada.getKey() + "    Valor ---> " + entrada.getValue() + System.lineSeparator());
-            //}
-            player.play();
-        }
-    }
-
+    // Cargamos el archivo
     @FXML
     private void onAction_loadfileButton(ActionEvent event) {
 
@@ -100,21 +97,47 @@ public class MainScreenController implements Initializable {
         Path file = FileUtils.getMP3Fromfile();
 
         if (file != null) {
-
             String mp3File = FileUtils.normalizeURLFormat(file.toString());
-
-            //txtArea1.appendText("Obrint [" + mp3File + "]....");
             openMedia(mp3File);
-
-            //btn_select.setDisable(true);
+            songs.add(mp3File);
+            playButton.setDisable(true);
         }
+    }
+
+    // Empezamos a reproducir la canción, además cogemos los metadatos en metaDades.
+    @FXML
+    private void onAction_PlayButton(ActionEvent event) {
+
+        int selectedSongPosition = songListView.getSelectionModel().getSelectedIndex();
+        if (selectedSongPosition > -1) {
+        }
+
+        if (media != null) {
+            metaDades = media.getMetadata();
+            player.play();
+        }
+    }
+
+    @FXML
+    private void onAction_deleteButton(ActionEvent event) {
+
+        int selectedSongPosition = songListView.getSelectionModel().getSelectedIndex();
+
+        if (selectedSongPosition > -1) {
+            songs.remove(selectedSongPosition);
+        }
+
+        if (songs.isEmpty()) {
+            deleteButton.setDisable(true);
+        }
+
     }
 
     //Este metodo 
     private void openMedia(String path) {
         try {
 
-            // actuaslitzem el recurs MP3
+            // actualitzem el recurs MP3
             this.media = new Media(path);
 
             // inicialitzem el reproductor
@@ -122,9 +145,7 @@ public class MainScreenController implements Initializable {
 
             // un cop el reproductor està preparat, podem activar el botó per a procedir
             player.setOnReady(() -> {
-
                 this.playButton.setDisable(false);
-
             });
 
         } catch (MediaException e) {
