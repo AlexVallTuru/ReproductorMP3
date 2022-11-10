@@ -117,7 +117,6 @@ public class MainScreenController implements Initializable {
 
         if (file != null) {
             String mp3File = FileUtils.normalizeURLFormat(file.toString());
-            openMedia(mp3File);
             /*if (media != null) {
                 metaDades = media.getMetadata();
                 for (String key : metaDades.keySet()) {
@@ -168,6 +167,7 @@ public class MainScreenController implements Initializable {
         if (songs.isEmpty()) {
             deleteButton.setDisable(true);
             player.stop();
+            media = null;
         }
     }
 
