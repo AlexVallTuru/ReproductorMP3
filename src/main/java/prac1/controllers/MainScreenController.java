@@ -73,10 +73,14 @@ public class MainScreenController implements Initializable {
     @FXML
     private ProgressBar songProgressBar;
 
+    @FXML
+    private ImageView volumenimage;
+
     Image playing;
 
     Image pausing;
-
+    Image audioMuted;
+    Image audioNoMuted;
     private Timer timer;
     private TimerTask task;
     private boolean running;
@@ -91,9 +95,9 @@ public class MainScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         songProgressBar.setVisible(false);
-        
+
         songListView.setItems(songs);
 
         songListView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -104,9 +108,7 @@ public class MainScreenController implements Initializable {
 
             deleteButton.setDisable(false);
         });
-        
-        
-        
+
         playing = new Image(FileUtils.getIcona(this, "play_1.png"));
 
         pausing = new Image(FileUtils.getIcona(this, "stop.png"));
@@ -115,9 +117,21 @@ public class MainScreenController implements Initializable {
         sliderBar.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+
                 player.setVolume(sliderBar.getValue() * 0.01);
+                
+               //Este codigo se encarga de mutear el volumen en caso de que el volumen sea 0 
+                /*if (sliderBar.getValue() == 0.00) {
+                    audioMuted = new Image(FileUtils.getIcona(this, "volumeMute.png"));
+                    volumenimage.setImage(audioMuted);
+                } else {
+                    audioNoMuted = new Image(FileUtils.getIcona(this, "volumen.png"));
+                    volumenimage.setImage(audioNoMuted);
+                };*/
+
             }
         });
+
     }
 
 // Cargamos el archivo
@@ -196,7 +210,7 @@ public class MainScreenController implements Initializable {
             player.seek(Duration.seconds(0.0));
         }
     }
-    
+
     /**
      * Retrocedeix 5 segons la reproduccio
      *
@@ -227,13 +241,13 @@ public class MainScreenController implements Initializable {
 
     private void openMedia(String path) {
         try {
-            
+
             // actuaslitzem el recurs MP3
             this.media = new Media(path);
 
             // inicialitzem el reproductor
             this.player = new MediaPlayer(media);
-            
+
             // un cop el reproductor està preparat, podem activar el botó per a procedir
             player.setOnReady(() -> {
                 this.playButton.setDisable(false);
@@ -271,17 +285,17 @@ public class MainScreenController implements Initializable {
         running = false;
         timer.cancel();
     }
+
     @FXML
     void onAction_MenuProgressBar(ActionEvent event) {
         //invierte del boolean de progressbar
-        progressbar = !progressbar; 
-        
-        if(progressbar){
+        progressbar = !progressbar;
+
+        if (progressbar) {
             songProgressBar.setVisible(true);
-        }
-        else{
+        } else {
             songProgressBar.setVisible(false);
         }
-        
+
     }
 }
