@@ -67,7 +67,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="randomButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="45.0" style="-fx-background-color: transp;">
+                  <Button fx:id="randomButton" mnemonicParsing="false" onAction="#onAction_randomButton" prefHeight="34.0" prefWidth="45.0" style="-fx-background-color: transp;">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>

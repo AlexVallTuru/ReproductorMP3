@@ -210,6 +210,16 @@ public class MainScreenController implements Initializable {
         currentTime = currentTime.add(Duration.seconds(5));
         this.player.seek(currentTime);
     }
+    
+    /**
+     * Reorganitza aleatoriament la llista de reproduccio
+     * 
+     * @param event 
+     */
+    @FXML
+    private void onAction_randomButton(ActionEvent event) {
+        FXCollections.shuffle(songs);
+    }
 
     private void openMedia(String path) {
         try {
