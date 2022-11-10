@@ -172,6 +172,7 @@ public class MainScreenController implements Initializable {
         if (songs.isEmpty()) {
             deleteButton.setDisable(true);
             player.stop();
+            media = null;
         }
     }
 
