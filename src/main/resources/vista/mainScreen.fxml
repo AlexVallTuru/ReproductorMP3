@@ -129,7 +129,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                  <ProgressBar fx:id="songProgressBar" layoutX="55.0" layoutY="367.0" prefHeight="23.0" prefWidth="431.0" progress="0.0" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="34.0" />
+                  <ProgressBar fx:id="songProgressBar" layoutX="55.0" layoutY="367.0" prefHeight="23.0" prefWidth="431.0" progress="0.0" style="-fx-accent: grey;" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="34.0" />
                </children>
             </AnchorPane>
          </center>
