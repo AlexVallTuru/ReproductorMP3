@@ -111,7 +111,7 @@
                   <MenuButton layoutX="409.0" layoutY="14.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="40.0" style="-fx-background-color: tran;" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                     <items>
                       <MenuItem fx:id="loadfileButton" mnemonicParsing="false" onAction="#onAction_loadfileButton" text="Cargar Archivo" />
-                      <MenuItem mnemonicParsing="false" text="Action 2" />
+                      <MenuItem fx:id="menusongProgressBar" mnemonicParsing="false" onAction="#onAction_MenuProgressBar" text="Barra de progreso" />
                     </items>
                      <graphic>
                         <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -129,6 +129,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
+                  <ProgressBar fx:id="songProgressBar" layoutX="55.0" layoutY="367.0" prefHeight="23.0" prefWidth="431.0" progress="0.0" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="34.0" />
                </children>
             </AnchorPane>
          </center>

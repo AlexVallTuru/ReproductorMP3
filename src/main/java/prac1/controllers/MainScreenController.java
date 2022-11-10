@@ -7,6 +7,8 @@ package prac1.controllers;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
@@ -26,6 +29,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
+import javax.sound.midi.Soundbank;
 import prac1.utils.FileUtils;
 
 /**
@@ -66,10 +70,17 @@ public class MainScreenController implements Initializable {
     private ImageView imageplay;
     @FXML
     private BorderPane borderpane;
+    @FXML
+    private ProgressBar songProgressBar;
 
     Image playing;
 
     Image pausing;
+
+    private Timer timer;
+    private TimerTask task;
+    private boolean running;
+    private boolean progressbar = false;
 
     /**
      * *
@@ -80,7 +91,9 @@ public class MainScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        
+        songProgressBar.setVisible(false);
+        
         songListView.setItems(songs);
 
         songListView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -91,7 +104,9 @@ public class MainScreenController implements Initializable {
 
             deleteButton.setDisable(false);
         });
-
+        
+        
+        
         playing = new Image(FileUtils.getIcona(this, "play_1.png"));
 
         pausing = new Image(FileUtils.getIcona(this, "stop.png"));
@@ -138,7 +153,7 @@ public class MainScreenController implements Initializable {
                 System.out.println(key);
             }
             player.play();
-
+            beginTimer();
             switch (player.getStatus()) {
                 case READY:
                     player.play();
@@ -167,15 +182,21 @@ public class MainScreenController implements Initializable {
 
         if (selectedSongPosition > -1) {
             songs.remove(selectedSongPosition);
+            pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
+            imageplay.setImage(pausing);
         }
 
         if (songs.isEmpty()) {
             deleteButton.setDisable(true);
             player.stop();
+            pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
+            imageplay.setImage(pausing);
             media = null;
+            songProgressBar.setProgress(0);
+            player.seek(Duration.seconds(0.0));
         }
     }
-
+    
     /**
      * Retrocedeix 5 segons la reproduccio
      *
@@ -206,13 +227,13 @@ public class MainScreenController implements Initializable {
 
     private void openMedia(String path) {
         try {
-
+            
             // actuaslitzem el recurs MP3
             this.media = new Media(path);
 
             // inicialitzem el reproductor
             this.player = new MediaPlayer(media);
-
+            
             // un cop el reproductor està preparat, podem activar el botó per a procedir
             player.setOnReady(() -> {
                 this.playButton.setDisable(false);
@@ -226,5 +247,41 @@ public class MainScreenController implements Initializable {
 
             System.out.println("ERROR obrint fitxer demo: " + path + ":" + e.toString());
         }
+    }
+
+    public void beginTimer() {
+
+        timer = new Timer();
+        task = new TimerTask() {
+            public void run() {
+                running = true;
+                double current = player.getCurrentTime().toSeconds();
+                double end = media.getDuration().toSeconds();
+                //System.out.println(current / end);
+                songProgressBar.setProgress(current / end);
+                if (current / end == 1) {
+                    cancelTimer();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, 1000, 1000);
+    }
+
+    public void cancelTimer() {
+        running = false;
+        timer.cancel();
+    }
+    @FXML
+    void onAction_MenuProgressBar(ActionEvent event) {
+        //invierte del boolean de progressbar
+        progressbar = !progressbar; 
+        
+        if(progressbar){
+            songProgressBar.setVisible(true);
+        }
+        else{
+            songProgressBar.setVisible(false);
+        }
+        
     }
 }
