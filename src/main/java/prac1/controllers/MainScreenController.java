@@ -63,7 +63,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private Button randomButton;
     @FXML
-    private MenuItem loadfileButton;
+    private MenuItem loadFileButton;
     @FXML
     private ListView<String> songListView;
     @FXML
@@ -91,9 +91,9 @@ public class MainScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         songProgressBar.setVisible(false);
-        
+
         songListView.setItems(songs);
 
         songListView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -104,9 +104,7 @@ public class MainScreenController implements Initializable {
 
             deleteButton.setDisable(false);
         });
-        
-        
-        
+
         playing = new Image(FileUtils.getIcona(this, "play_1.png"));
 
         pausing = new Image(FileUtils.getIcona(this, "stop.png"));
@@ -122,7 +120,7 @@ public class MainScreenController implements Initializable {
 
 // Cargamos el archivo
     @FXML
-    private void onAction_loadfileButton(ActionEvent event) {
+    private void onAction_loadFileButton(ActionEvent event) {
 
         // desactivem el botó fins que el player estigui en estat READY 
         this.playButton.setDisable(true);
@@ -139,6 +137,9 @@ public class MainScreenController implements Initializable {
     // Empezamos a reproducir la canción, además cogemos los metadatos en metaDades.
     @FXML
     private void onAction_PlayButton(ActionEvent event) {
+
+        // Comienza el progressBar
+        beginTimer();
 
         switch (player.getStatus()) {
             case READY:
@@ -181,7 +182,7 @@ public class MainScreenController implements Initializable {
             player.seek(Duration.seconds(0.0));
         }
     }
-    
+
     /**
      * Retrocedeix 5 segons la reproduccio
      *
@@ -212,13 +213,13 @@ public class MainScreenController implements Initializable {
 
     private void openMedia(String path) {
         try {
-            
+
             // actuaslitzem el recurs MP3
             this.media = new Media(path);
 
             // inicialitzem el reproductor
             this.player = new MediaPlayer(media);
-            
+
             // un cop el reproductor està preparat, podem activar el botó per a procedir
             player.setOnReady(() -> {
                 this.playButton.setDisable(false);
@@ -264,17 +265,17 @@ public class MainScreenController implements Initializable {
         running = false;
         timer.cancel();
     }
+
     @FXML
     void onAction_MenuProgressBar(ActionEvent event) {
         //invierte del boolean de progressbar
-        progressbar = !progressbar; 
-        
-        if(progressbar){
+        progressbar = !progressbar;
+
+        if (progressbar) {
             songProgressBar.setVisible(true);
-        }
-        else{
+        } else {
             songProgressBar.setVisible(false);
         }
-        
+
     }
 }
