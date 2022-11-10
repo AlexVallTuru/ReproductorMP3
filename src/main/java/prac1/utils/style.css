@@ -1,5 +1,5 @@
 .bodybg {
-    -fx-background-image: url("ic_arbol.png");
+    -fx-background-image: url("../../..//resources/icons/ic_arbol.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center center;

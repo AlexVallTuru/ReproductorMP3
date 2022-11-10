@@ -24,6 +24,7 @@ import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import prac1.utils.FileUtils;
 
@@ -63,6 +64,8 @@ public class MainScreenController implements Initializable {
     private ListView<String> songListView;
     @FXML
     private ImageView imageplay;
+    @FXML
+    private BorderPane borderpane;
 
     Image playing;
 
@@ -88,10 +91,6 @@ public class MainScreenController implements Initializable {
 
             deleteButton.setDisable(false);
         });
-
-        String path = FileUtils.getTestMP3(this);
-        System.out.println(path);
-        openMedia(path);
 
         playing = new Image(FileUtils.getIcona(this, "play_1.png"));
 
@@ -140,16 +139,21 @@ public class MainScreenController implements Initializable {
             player.play();
 
             switch (player.getStatus()) {
+                case READY:
+                    player.play();
+                    pausing = new Image(FileUtils.getIcona(this, "pause.png"));
+                    imageplay.setImage(pausing);
+                    break;
                 case PLAYING:
                     player.pause();
-                    playing = new Image(FileUtils.getIcona(this, "pause.png"));
-                    imageplay.setImage(playing);
+                    pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
+                    imageplay.setImage(pausing);
                     break;
 
                 case PAUSED:
                     player.play();
-                    pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
-                    imageplay.setImage(pausing);
+                    playing = new Image(FileUtils.getIcona(this, "pause.png"));
+                    imageplay.setImage(playing);
                     break;
             }
         }
