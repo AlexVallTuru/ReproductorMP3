@@ -15,7 +15,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="567.0" prefWidth="795.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="prac1.controllers.MainScreenController">
    <children>
-      <BorderPane prefHeight="567.0" prefWidth="795.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane id="borderPlane" fx:id="borderpane" prefHeight="567.0" prefWidth="795.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
             <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="136.0" prefWidth="795.0" style="-fx-background-color: #515151;" BorderPane.alignment="CENTER">
                <BorderPane.margin>
@@ -106,7 +106,7 @@
             </HBox>
          </bottom>
          <center>
-            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="522.0" prefWidth="609.0" styleClass="bodybg" stylesheets="@../../java/prac1/utils/style.css" BorderPane.alignment="CENTER">
+            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="522.0" prefWidth="609.0" BorderPane.alignment="CENTER">
                <children>
                   <MenuButton layoutX="409.0" layoutY="14.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="40.0" style="-fx-background-color: tran;" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                     <items>
@@ -121,6 +121,14 @@
                          </ImageView>
                      </graphic>
                   </MenuButton>
+                  <Button layoutX="240.0" layoutY="200.0" mnemonicParsing="false" style="-fx-background-color: transp;" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="150.0">
+                     <graphic>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/logomp3.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
                </children>
             </AnchorPane>
          </center>
