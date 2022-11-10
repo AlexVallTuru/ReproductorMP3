@@ -131,13 +131,7 @@ public class MainScreenController implements Initializable {
 
         if (file != null) {
             String mp3File = FileUtils.normalizeURLFormat(file.toString());
-            /*if (media != null) {
-                metaDades = media.getMetadata();
-                for (String key : metaDades.keySet()) {
-                    System.out.println(key);
-                }
-            }*/
-            songs.add(mp3File);
+            openMedia(mp3File);
             playButton.setDisable(true);
         }
     }
@@ -146,31 +140,23 @@ public class MainScreenController implements Initializable {
     @FXML
     private void onAction_PlayButton(ActionEvent event) {
 
-        if (media != null) {
-            metaDades = media.getMetadata();
-            for (String key : metaDades.keySet()) {
-                System.out.println(key);
-            }
-            player.play();
-            beginTimer();
-            switch (player.getStatus()) {
-                case READY:
-                    player.play();
-                    pausing = new Image(FileUtils.getIcona(this, "pause.png"));
-                    imageplay.setImage(pausing);
-                    break;
-                case PLAYING:
-                    player.pause();
-                    pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
-                    imageplay.setImage(pausing);
-                    break;
+        switch (player.getStatus()) {
+            case READY:
+                player.play();
+                pausing = new Image(FileUtils.getIcona(this, "pause.png"));
+                imageplay.setImage(pausing);
+                break;
+            case PLAYING:
+                player.pause();
+                pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
+                imageplay.setImage(pausing);
+                break;
 
-                case PAUSED:
-                    player.play();
-                    playing = new Image(FileUtils.getIcona(this, "pause.png"));
-                    imageplay.setImage(playing);
-                    break;
-            }
+            case PAUSED:
+                player.play();
+                playing = new Image(FileUtils.getIcona(this, "pause.png"));
+                imageplay.setImage(playing);
+                break;
         }
     }
 
@@ -236,12 +222,20 @@ public class MainScreenController implements Initializable {
             // un cop el reproductor està preparat, podem activar el botó per a procedir
             player.setOnReady(() -> {
                 this.playButton.setDisable(false);
+                metaDades = media.getMetadata();
+                if (!metaDades.isEmpty()) {
+                    if (metaDades.containsKey("title")) {
+                        songs.add(metaDades.get("title").toString());
+                    } else if (metaDades.containsKey("author")) {
+                        songs.add(metaDades.get("author").toString());
+                    }
+                } else {
+                    songs.add("Unknown artist");
+                }
             });
-
         } catch (MediaException e) {
 
             this.media = null;
-
             this.player = null;
 
             System.out.println("ERROR obrint fitxer demo: " + path + ":" + e.toString());
