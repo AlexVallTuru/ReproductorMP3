@@ -83,11 +83,16 @@ public class MainScreenController implements Initializable {
         songListView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
 
             this.songListView.setItems(songs);
+
+            openMedia(newValue);
+
             deleteButton.setDisable(false);
         });
 
         String path = FileUtils.getTestMP3(this);
+        System.out.println(path);
         openMedia(path);
+
         playing = new Image(FileUtils.getIcona(this, "play_1.png"));
 
         pausing = new Image(FileUtils.getIcona(this, "stop.png"));
@@ -101,14 +106,6 @@ public class MainScreenController implements Initializable {
         });
     }
 
-    /**
-     * *
-     * Inicialitza el reproductor amb un fitxer MP3
-     *
-     * El format ha de ser de tipus URL
-     *
-     *
-     */
 // Cargamos el archivo
     @FXML
     private void onAction_loadfileButton(ActionEvent event) {
@@ -121,6 +118,12 @@ public class MainScreenController implements Initializable {
         if (file != null) {
             String mp3File = FileUtils.normalizeURLFormat(file.toString());
             openMedia(mp3File);
+            /*if (media != null) {
+                metaDades = media.getMetadata();
+                for (String key : metaDades.keySet()) {
+                    System.out.println(key);
+                }
+            }*/
             songs.add(mp3File);
             playButton.setDisable(true);
         }
@@ -129,13 +132,12 @@ public class MainScreenController implements Initializable {
     // Empezamos a reproducir la canción, además cogemos los metadatos en metaDades.
     @FXML
     private void onAction_PlayButton(ActionEvent event) {
-        // si l'anterior ha anat bé (media no és null), obtenim les metadades
-        int selectedSongPosition = songListView.getSelectionModel().getSelectedIndex();
-        if (selectedSongPosition > -1) {
-        }
 
         if (media != null) {
             metaDades = media.getMetadata();
+            for (String key : metaDades.keySet()) {
+                System.out.println(key);
+            }
             player.play();
 
             switch (player.getStatus()) {
@@ -165,8 +167,8 @@ public class MainScreenController implements Initializable {
 
         if (songs.isEmpty()) {
             deleteButton.setDisable(true);
+            player.stop();
         }
-
     }
 
     /**
