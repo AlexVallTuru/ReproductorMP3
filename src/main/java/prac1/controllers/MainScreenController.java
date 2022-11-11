@@ -4,6 +4,8 @@
  */
 package prac1.controllers;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
@@ -105,12 +107,8 @@ public class MainScreenController implements Initializable {
         });
 
         //Este codigo habilita el slider volumen
-        sliderBar.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-
-                player.setVolume(sliderBar.getValue() * 0.01);
-            }
+        sliderBar.valueProperty().addListener((ObservableValue<? extends Number> ov, Number t, Number t1) -> {
+            player.setVolume(sliderBar.getValue() * 0.01);
         });
     }
 
@@ -129,8 +127,8 @@ public class MainScreenController implements Initializable {
         this.playButton.setDisable(true);
 
         Path file = FileUtils.getMP3Fromfile();
-
-        if (file != null) {
+        
+        if (file != null && file.toString().toLowerCase().endsWith(".mp3")) {
             String mp3File = FileUtils.normalizeURLFormat(file.toString());
             openMedia(mp3File);
             player.setOnReady(() -> {
@@ -142,7 +140,12 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    // Empezamos a reproducir la canción
+    /**
+     * Empieza y pausa la reproduccion de la cancion seleccionada, cambiando el
+     * icono del boton cuando es necesario
+     *
+     * @param event
+     */
     @FXML
     private void onAction_playButton(ActionEvent event) {
 
@@ -203,7 +206,7 @@ public class MainScreenController implements Initializable {
     }
 
     /**
-     * Retrocedeix 5 segons la reproduccio
+     * Retrocede 5 segundos la reproduccion de la pista actual
      *
      * @param event
      */
@@ -217,7 +220,7 @@ public class MainScreenController implements Initializable {
     }
 
     /**
-     * Avança 5 segons la reproduccio
+     * Avanza 5 segundos la reproduccion de la pista actual
      *
      * @param event
      */
@@ -243,9 +246,9 @@ public class MainScreenController implements Initializable {
             FXCollections.shuffle(songs);
             songNames.clear();
 
-            for (Song s : songs) {
+            songs.forEach(s -> {
                 songNames.add(s.getSongName());
-            }
+            });
         }
     }
 
@@ -295,6 +298,7 @@ public class MainScreenController implements Initializable {
         timer = new Timer();
         task = new TimerTask() {
 
+            @Override
             public void run() {
 
                 running = true;
