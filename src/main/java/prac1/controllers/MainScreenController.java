@@ -6,7 +6,6 @@ package prac1.controllers;
 
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import prac1.utils.FileUtils;
+import prac1.utils.Song;
 
 /**
  * FXML Controller class
@@ -40,8 +40,8 @@ import prac1.utils.FileUtils;
 public class MainScreenController implements Initializable {
 
     ObservableMap<String, Object> metaDades;
-    ObservableList<String> songs = FXCollections.observableArrayList();
-    ArrayList<String> _path = new ArrayList<>();
+    ObservableList<String> songNames = FXCollections.observableArrayList();
+    ObservableList<Song> songs = FXCollections.observableArrayList();
     Media media = null;
     MediaPlayer player = null;
     private Timer timer;
@@ -50,8 +50,7 @@ public class MainScreenController implements Initializable {
     private boolean progressbar = false;
     Image playing;
     Image pausing;
-    //Image audioMuted;
-    //Image audioNoMuted;
+    Song lastLoadedSong;
 
     @FXML
     private Button repeatButton;
@@ -95,15 +94,13 @@ public class MainScreenController implements Initializable {
         playButton.setDisable(true);
         songProgressBar.setVisible(false);
 
-        songListView.setItems(songs);
+        songListView.setItems(songNames);
 
         songListView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            System.out.println("old" + oldValue);
-            System.out.println("new" + newValue);
-            System.out.println("obs" + observable);
-            this.songListView.setItems(songs);
 
-            openMedia(_path.get(songListView.getSelectionModel().getSelectedIndex()));
+            this.songListView.setItems(songNames);
+
+            openMedia(songs.get(songListView.getSelectionModel().getSelectedIndex()).getSongPath());
 
         });
 
@@ -117,7 +114,14 @@ public class MainScreenController implements Initializable {
         });
     }
 
-// Cargamos el archivo
+    /**
+     * Obtiene la ruta del archivo que se carga, la envía a "openMedia", y se
+     * queda esperando a que "media" esté listo, cuando está listo rellena los
+     * atributos de Song y además informa en el ListView el título de la
+     * canción.
+     *
+     * @param event
+     */
     @FXML
     private void onAction_loadFileButton(ActionEvent event) {
 
@@ -129,6 +133,11 @@ public class MainScreenController implements Initializable {
         if (file != null) {
             String mp3File = FileUtils.normalizeURLFormat(file.toString());
             openMedia(mp3File);
+            player.setOnReady(() -> {
+                lastLoadedSong = getFilledSong(mp3File);
+                songs.add(lastLoadedSong);
+                songNames.add(lastLoadedSong.getSongName());
+            });
             playButton.setDisable(true);
         }
     }
@@ -161,6 +170,14 @@ public class MainScreenController implements Initializable {
         }
     }
 
+    /**
+     * Obtiene el índice de la canción que tienes seleccionada y la elimina
+     * tanto del ListView como de la lista de "songs". Además, si la canción que
+     * has eliminado era la última canción deshabilita el botón de Play y limpia
+     * el media.
+     *
+     * @param event
+     */
     @FXML
     private void onAction_deleteButton(ActionEvent event) {
 
@@ -168,12 +185,12 @@ public class MainScreenController implements Initializable {
 
         if (selectedSongPosition > -1) {
             songs.remove(selectedSongPosition);
-            _path.remove(selectedSongPosition);
+            songNames.remove(selectedSongPosition);
             pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
             imagePlay.setImage(pausing);
         }
 
-        if (songs.isEmpty()) {
+        if (songNames.isEmpty()) {
             deleteButton.setDisable(true);
             playButton.setDisable(true);
             player.stop();
@@ -222,12 +239,18 @@ public class MainScreenController implements Initializable {
     private void onAction_randomButton(ActionEvent event) {
 
         FXCollections.shuffle(songs);
+
+        songNames.clear();
+        for (Song s : songs) {
+            songNames.add(s.getSongName());
+        }
+
     }
 
     private void openMedia(String path) {
         try {
 
-            // actuaslitzem el recurs MP3
+            // actualitzem el recurs MP3
             this.media = new Media(path);
 
             // inicialitzem el reproductor
@@ -235,10 +258,6 @@ public class MainScreenController implements Initializable {
 
             // un cop el reproductor està preparat, podem activar el botó per a procedir
             player.setOnReady(() -> {
-                if (!_path.contains(path)) {
-                    _path.add(path);
-                    getMetadata();
-                }
 
                 this.playButton.setDisable(false);
             });
@@ -251,21 +270,22 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    private void getMetadata() {
+    /**
+     * Genera un objeto de tipo "Song" y le asignamos los atributos "path",
+     * "metaDades" y lo retornamos.
+     *
+     * @param path
+     */
+    private Song getFilledSong(String path) {
+
+        //Creamos un nuevo "Song" y le seteamos el atributo path.
+        Song newSong = new Song();
+        newSong.setSongPath(path);
+
         metaDades = media.getMetadata();
+        newSong.setMetaDades(metaDades);
 
-        if (!metaDades.isEmpty()) {
-
-            if (metaDades.containsKey("title")) {
-                songs.add(metaDades.get("title").toString());
-            } else if (metaDades.containsKey("author")) {
-                songs.add(metaDades.get("author").toString());
-            } else {
-                songs.add("Unknown artist");
-            }
-        } else {
-            songs.add("Unknown artist");
-        }
+        return newSong;
     }
 
     public void beginTimer() {
