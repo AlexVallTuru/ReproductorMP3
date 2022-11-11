@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import javafx.scene.image.Image;
+import prac1.utils.FileUtils;
 
 /**
  * JavaFX App
@@ -30,9 +32,16 @@ public class App extends Application {
 
             scene = new Scene(p);
             
+            //Con estas dos variables establecemos el maximo y minimo al hacer pequeña la aplicacion
             primaryStage.setMinHeight(600);
             primaryStage.setMinWidth(810);
             
+            //Establece el nombre que se muestra de la aplicacion
+            primaryStage.setTitle("RetroMedia");
+            
+            //Establecemos el logo que se mostrara en la apliacacion
+            Image image = new Image(FileUtils.getIcona(this, "LOGOMP3.png"));
+            primaryStage.getIcons().add(image);
             
             primaryStage.setScene(scene);
             
