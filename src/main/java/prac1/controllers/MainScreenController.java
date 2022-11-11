@@ -6,6 +6,7 @@ package prac1.controllers;
 
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,6 +41,7 @@ public class MainScreenController implements Initializable {
 
     ObservableMap<String, Object> metaDades;
     ObservableList<String> songs = FXCollections.observableArrayList();
+    ArrayList<String> _path = new ArrayList<>();
     Media media = null;
     MediaPlayer player = null;
     private Timer timer;
@@ -54,17 +56,15 @@ public class MainScreenController implements Initializable {
     @FXML
     private Button repeatButton;
     @FXML
-    private Button backfastforwardButton;
+    private Button backFastForwardButton;
     @FXML
     private Button playButton;
     @FXML
-    private Button fastforwardButton;
+    private Button fastForwardButton;
     @FXML
     private Button volumButton;
     @FXML
     private Slider sliderBar;
-    @FXML
-    private Button listPlayButton;
     @FXML
     private Button deleteButton;
     @FXML
@@ -74,13 +74,13 @@ public class MainScreenController implements Initializable {
     @FXML
     private ListView<String> songListView;
     @FXML
-    private ImageView imageplay;
+    private ImageView imagePlay;
     @FXML
-    private BorderPane borderpane;
+    private BorderPane borderPane;
     @FXML
     private ProgressBar songProgressBar;
     @FXML
-    private ImageView volumenimage;
+    private ImageView volumenImage;
 
     /**
      * *
@@ -92,40 +92,29 @@ public class MainScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        playButton.setDisable(true);
         songProgressBar.setVisible(false);
 
         songListView.setItems(songs);
 
         songListView.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-
+            System.out.println("old" + oldValue);
+            System.out.println("new" + newValue);
+            System.out.println("obs" + observable);
             this.songListView.setItems(songs);
 
-            openMedia(newValue);
+            openMedia(_path.get(songListView.getSelectionModel().getSelectedIndex()));
 
-            deleteButton.setDisable(false);
         });
 
-        /*playing = new Image(FileUtils.getIcona(this, "play_1.png"));
-
-        pausing = new Image(FileUtils.getIcona(this, "stop.png"));*/
         //Este codigo habilita el slider volumen
         sliderBar.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
 
                 player.setVolume(sliderBar.getValue() * 0.01);
-
-                //Este codigo se encarga de mutear el volumen en caso de que el volumen sea 0 
-                /*if (sliderBar.getValue() == 0.00) {
-                    audioMuted = new Image(FileUtils.getIcona(this, "volumeMute.png"));
-                    volumenimage.setImage(audioMuted);
-                } else {
-                    audioNoMuted = new Image(FileUtils.getIcona(this, "volumen.png"));
-                    volumenimage.setImage(audioNoMuted);
-                };*/
             }
         });
-
     }
 
 // Cargamos el archivo
@@ -144,9 +133,9 @@ public class MainScreenController implements Initializable {
         }
     }
 
-    // Empezamos a reproducir la canción, además cogemos los metadatos en metaDades.
+    // Empezamos a reproducir la canción
     @FXML
-    private void onAction_PlayButton(ActionEvent event) {
+    private void onAction_playButton(ActionEvent event) {
 
         // Comienza el progressBar
         beginTimer();
@@ -155,18 +144,19 @@ public class MainScreenController implements Initializable {
             case READY:
                 player.play();
                 pausing = new Image(FileUtils.getIcona(this, "pause.png"));
-                imageplay.setImage(pausing);
+                imagePlay.setImage(pausing);
                 break;
+
             case PLAYING:
                 player.pause();
                 pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
-                imageplay.setImage(pausing);
+                imagePlay.setImage(pausing);
                 break;
 
             case PAUSED:
                 player.play();
                 playing = new Image(FileUtils.getIcona(this, "pause.png"));
-                imageplay.setImage(playing);
+                imagePlay.setImage(playing);
                 break;
         }
     }
@@ -178,15 +168,17 @@ public class MainScreenController implements Initializable {
 
         if (selectedSongPosition > -1) {
             songs.remove(selectedSongPosition);
+            _path.remove(selectedSongPosition);
             pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
-            imageplay.setImage(pausing);
+            imagePlay.setImage(pausing);
         }
 
         if (songs.isEmpty()) {
             deleteButton.setDisable(true);
+            playButton.setDisable(true);
             player.stop();
             pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
-            imageplay.setImage(pausing);
+            imagePlay.setImage(pausing);
             media = null;
             songProgressBar.setProgress(0);
             player.seek(Duration.seconds(0.0));
@@ -199,7 +191,7 @@ public class MainScreenController implements Initializable {
      * @param event
      */
     @FXML
-    private void onAction_backfastforwardButton(ActionEvent event) {
+    private void onAction_backFastForwardButton(ActionEvent event) {
 
         //Obtenir temps de reproduccio actual i restar 5 segons
         Duration currentTime = this.player.getCurrentTime();
@@ -213,7 +205,7 @@ public class MainScreenController implements Initializable {
      * @param event
      */
     @FXML
-    private void onAction_fastforwardButton(ActionEvent event) {
+    private void onAction_fastForwardButton(ActionEvent event) {
 
         //Obtenir temps de reproduccio actual i afegir 5 segons
         Duration currentTime = this.player.getCurrentTime();
@@ -228,6 +220,7 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     private void onAction_randomButton(ActionEvent event) {
+
         FXCollections.shuffle(songs);
     }
 
@@ -242,18 +235,11 @@ public class MainScreenController implements Initializable {
 
             // un cop el reproductor està preparat, podem activar el botó per a procedir
             player.setOnReady(() -> {
-                metaDades = media.getMetadata();
-                if (!metaDades.isEmpty()) {
-                    if (metaDades.containsKey("title")) {
-                        songs.add(metaDades.get("title").toString());
-                    } else if (metaDades.containsKey("author")) {
-                        songs.add(metaDades.get("author").toString());
-                    } else {
-                        songs.add("Unknown artist");
-                    }
-                } else {
-                    songs.add("Unknown artist");
+                if (!_path.contains(path)) {
+                    _path.add(path);
+                    getMetadata();
                 }
+
                 this.playButton.setDisable(false);
             });
         } catch (MediaException e) {
@@ -265,16 +251,36 @@ public class MainScreenController implements Initializable {
         }
     }
 
+    private void getMetadata() {
+        metaDades = media.getMetadata();
+
+        if (!metaDades.isEmpty()) {
+
+            if (metaDades.containsKey("title")) {
+                songs.add(metaDades.get("title").toString());
+            } else if (metaDades.containsKey("author")) {
+                songs.add(metaDades.get("author").toString());
+            } else {
+                songs.add("Unknown artist");
+            }
+        } else {
+            songs.add("Unknown artist");
+        }
+    }
+
     public void beginTimer() {
 
         timer = new Timer();
         task = new TimerTask() {
+
             public void run() {
+
                 running = true;
                 double current = player.getCurrentTime().toSeconds();
                 double end = media.getDuration().toSeconds();
                 //System.out.println(current / end);
                 songProgressBar.setProgress(current / end);
+
                 if (current / end == 1) {
                     cancelTimer();
                 }
@@ -284,12 +290,13 @@ public class MainScreenController implements Initializable {
     }
 
     public void cancelTimer() {
+
         running = false;
         timer.cancel();
     }
 
     @FXML
-    void onAction_MenuProgressBar(ActionEvent event) {
+    void onAction_menuProgressBar(ActionEvent event) {
         //invierte del boolean de progressbar
         progressbar = !progressbar;
 
