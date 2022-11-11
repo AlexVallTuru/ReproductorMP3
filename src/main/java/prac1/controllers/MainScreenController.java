@@ -231,20 +231,22 @@ public class MainScreenController implements Initializable {
     }
 
     /**
-     * Reorganitza aleatoriament la llista de reproduccio
+     * Reorganiza aleatoriamente la lista de reproducción siempre y cuando haya
+     * al menos 3 canciones.
      *
      * @param event
      */
     @FXML
     private void onAction_randomButton(ActionEvent event) {
 
-        FXCollections.shuffle(songs);
+        if (songNames.size() <= 3) {
+            FXCollections.shuffle(songs);
+            songNames.clear();
 
-        songNames.clear();
-        for (Song s : songs) {
-            songNames.add(s.getSongName());
+            for (Song s : songs) {
+                songNames.add(s.getSongName());
+            }
         }
-
     }
 
     private void openMedia(String path) {
