@@ -4,14 +4,11 @@
  */
 package prac1.controllers;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -127,7 +124,7 @@ public class MainScreenController implements Initializable {
         this.playButton.setDisable(true);
 
         Path file = FileUtils.getMP3Fromfile();
-        
+
         if (file != null && file.toString().toLowerCase().endsWith(".mp3")) {
             String mp3File = FileUtils.normalizeURLFormat(file.toString());
             openMedia(mp3File);
@@ -200,8 +197,7 @@ public class MainScreenController implements Initializable {
             pausing = new Image(FileUtils.getIcona(this, "play_1.png"));
             imagePlay.setImage(pausing);
             media = null;
-            songProgressBar.setProgress(0);
-            player.seek(Duration.seconds(0.0));
+            cancelTimer();
         }
     }
 
@@ -252,6 +248,11 @@ public class MainScreenController implements Initializable {
         }
     }
 
+    /**
+     * Recibe la ruta de una canción y la carga en el MediaPlayer.
+     *
+     * @param path
+     */
     private void openMedia(String path) {
         try {
 
@@ -294,12 +295,13 @@ public class MainScreenController implements Initializable {
     }
 
     /**
-     * Generamos la progress bar
-     * 
+     * Generamos la progress bar e iniciamos el timer, si el tiempo de la
+     * canción actual dividido entre el tiempo final de "Media" es 1, entonces
+     * paramos la progressBar.
      *
-     * 
-    */
-
+     *
+     *
+     */
     public void beginTimer() {
 
         timer = new Timer();
@@ -311,7 +313,6 @@ public class MainScreenController implements Initializable {
                 running = true;
                 double current = player.getCurrentTime().toSeconds();
                 double end = media.getDuration().toSeconds();
-                //System.out.println(current / end);
                 songProgressBar.setProgress(current / end);
 
                 if (current / end == 1) {
@@ -322,6 +323,11 @@ public class MainScreenController implements Initializable {
         timer.scheduleAtFixedRate(task, 1000, 1000);
     }
 
+    /**
+     * Cancela el timer
+     *
+     * @param event
+     */
     public void cancelTimer() {
 
         running = false;
@@ -330,10 +336,10 @@ public class MainScreenController implements Initializable {
 
     /**
      * Habilita/Deshabilita la progress bar con la opción del menu
-     * 
+     *
      *
      * @param event
-    */
+     */
     @FXML
     void onAction_menuProgressBar(ActionEvent event) {
         //invierte del boolean de progressbar
