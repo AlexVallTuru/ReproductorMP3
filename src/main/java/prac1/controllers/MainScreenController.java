@@ -16,6 +16,8 @@ import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -124,8 +126,7 @@ public class MainScreenController implements Initializable {
         this.playButton.setDisable(true);
 
         Path file = FileUtils.getMP3Fromfile();
-
-        if (file != null && file.toString().toLowerCase().endsWith(".mp3")) {
+        if (file.toString().toLowerCase().endsWith(".mp3")) {
             String mp3File = FileUtils.normalizeURLFormat(file.toString());
             openMedia(mp3File);
             player.setOnReady(() -> {
@@ -134,6 +135,12 @@ public class MainScreenController implements Initializable {
                 songNames.add(lastLoadedSong.getSongName());
             });
             playButton.setDisable(true);
+        } else {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setHeaderText("Fitxer no vàlid");
+            alert.setContentText("Només s'admeten fitxers .mp3");
+            alert.show();
         }
     }
 
@@ -325,8 +332,6 @@ public class MainScreenController implements Initializable {
 
     /**
      * Cancela el timer
-     *
-     * @param event
      */
     public void cancelTimer() {
 
