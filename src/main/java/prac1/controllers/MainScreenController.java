@@ -293,6 +293,13 @@ public class MainScreenController implements Initializable {
         return newSong;
     }
 
+    /**
+     * Generamos la progress bar
+     * 
+     *
+     * 
+    */
+
     public void beginTimer() {
 
         timer = new Timer();
@@ -321,6 +328,12 @@ public class MainScreenController implements Initializable {
         timer.cancel();
     }
 
+    /**
+     * Habilita/Deshabilita la progress bar con la opción del menu
+     * 
+     *
+     * @param event
+    */
     @FXML
     void onAction_menuProgressBar(ActionEvent event) {
         //invierte del boolean de progressbar
